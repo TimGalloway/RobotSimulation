@@ -51,6 +51,7 @@ namespace RobotSimulation
                 }
                 if ((line == "REPORT") && robotPosition.Valid)
                 {
+                    Console.WriteLine(""); 
                     ConsoleRenderer.RenderDocument(robotPosition.Report());
                 }
 
