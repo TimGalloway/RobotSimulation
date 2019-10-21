@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Alba.CsConsoleFormat;
+using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace RobotSimulation
@@ -71,10 +73,55 @@ namespace RobotSimulation
             }
             return true;
         }
-        public string Report()
+        public Document Report(int maxX, int maxY)
         {
-            string strReturn = " - Current Position: " + this.X + "," + this.Y + " Facing: " + this.Dir;
-            return strReturn;
+            var headerThickness = new LineThickness(LineWidth.Double, LineWidth.Single);
+            char arrow = ' ';
+            List<Cell> children = new List<Cell>();
+            for (int aa = maxX; aa >= 0; aa--)
+            {
+                for (int bb = 0; bb <= maxY; bb++)
+                {
+                    if ((this.Y == aa) && (this.X == bb))
+                    {
+                        switch (this.Dir)
+                        {
+                            case "NORTH":
+                                arrow = '^';
+                                break;
+                            case "SOUTH":
+                                arrow = 'v';
+                                break;
+                            case "EAST":
+                                arrow = '>';
+                                break;
+                            case "WEST":
+                                arrow = '<';
+                                break;
+                        }
+                        Cell cellA = new Cell(" " + arrow + " ") { Stroke = headerThickness };
+                        children.Add(cellA);
+                    }
+                    else
+                    {
+                        Cell cellA = new Cell("   ") { Stroke = headerThickness };
+                        children.Add(cellA);
+                    }
+
+                }
+            }
+            var doc = new Document(
+                new Span("Current Position: " + this.X + "," + this.Y + " Facing: " + this.Dir) { Color = ConsoleColor.Yellow }, "", "\n",
+                new Grid
+                {
+                    Color = ConsoleColor.Gray,
+                    Columns = { GridLength.Auto, GridLength.Auto, GridLength.Auto, GridLength.Auto, GridLength.Auto },
+                    Children = {
+                        children
+                    }
+                }
+            );
+            return doc;
         }
 
         public bool Move(int maxX, int maxY)
@@ -166,7 +213,7 @@ namespace RobotSimulation
                 }
                 if ((line == "REPORT") && robotPosition.Valid)
                 {
-                    Console.Write(robotPosition.Report());
+                    ConsoleRenderer.RenderDocument(robotPosition.Report(maxX,maxY));
                 }
 
                 Console.WriteLine("");
