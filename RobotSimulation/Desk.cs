@@ -4,9 +4,9 @@ using System.Text;
 
 namespace RobotSimulation
 {
-    static public class Desk
+    public static class Desk
     {
-        static public int maxX { get; set; }
-        static public int maxY { get; set; }
+        public static int maxX { get; set; }
+        public static int maxY { get; set; }
     }
 }

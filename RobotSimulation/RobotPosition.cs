@@ -16,9 +16,9 @@ namespace RobotSimulation
         {
             this.Valid = false;
         }
-        public bool Place(int x, int y, string Direction, int maxX, int maxY)
+        public bool Place(int x, int y, string Direction)
         {
-            if ((x >= 0) && (x <= maxX) && (y >= 0) && (y <= maxY))
+            if ((x >= 0) && (x <= Desk.maxX) && (y >= 0) && (y <= Desk.maxY))
             {
                 this.X = x;
                 this.Y = y;
@@ -73,14 +73,14 @@ namespace RobotSimulation
             }
             return true;
         }
-        public Document Report(int maxX, int maxY)
+        public Document Report()
         {
             var headerThickness = new LineThickness(LineWidth.Double, LineWidth.Single);
             char arrow = ' ';
             List<Cell> children = new List<Cell>();
-            for (int aa = maxX; aa >= 0; aa--)
+            for (int aa = Desk.maxX; aa >= 0; aa--)
             {
-                for (int bb = 0; bb <= maxY; bb++)
+                for (int bb = 0; bb <= Desk.maxY; bb++)
                 {
                     if ((this.Y == aa) && (this.X == bb))
                     {
@@ -124,13 +124,13 @@ namespace RobotSimulation
             return doc;
         }
 
-        public bool Move(int maxX, int maxY)
+        public bool Move()
         {
             bool boolReturn = true;
             if (this.Dir == "NORTH")
             {
                 this.Y++;
-                if (this.Y > maxY)
+                if (this.Y > Desk.maxY)
                 {
                     this.Y--;
                     boolReturn = false;
@@ -148,7 +148,7 @@ namespace RobotSimulation
             if (this.Dir == "EAST")
             {
                 this.X++;
-                if (this.X > maxX)
+                if (this.X > Desk.maxX)
                 {
                     this.X--;
                     boolReturn = false;
