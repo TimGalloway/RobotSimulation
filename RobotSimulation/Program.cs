@@ -9,14 +9,17 @@ namespace RobotSimulation
         static void Main(string[] args)
         {
             //Set the table size
-            int maxX = 4;
-            int maxY = 4;
+            //int maxX = 4;
+            //int maxY = 4;
 
             // Read a text file line by line.  
             string[] lines = File.ReadAllLines("C:\\Source\\RobotSimulation\\commands.txt");
 
-            // Create RobotPosition object
+            // Create required objects
             RobotPosition robotPosition = new RobotPosition();
+            Desk desk = new Desk();
+            desk.maxX = 4;
+            desk.maxY = 4;
             
             foreach (string line in lines) { 
                 Console.Write(line);
