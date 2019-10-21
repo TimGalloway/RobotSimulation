@@ -14,6 +14,110 @@ namespace RobotSimulation
         {
             this.Valid = false;
         }
+        public bool Place(int x, int y, string Direction, int maxX, int maxY)
+        {
+            if ((x >= 0) && (x <= maxX) && (y >= 0) && (y <= maxY))
+            {
+                this.X = x;
+                this.Y = y;
+                this.Dir = Direction;
+                this.Valid = true;
+            }
+            else
+            {
+                this.Valid = false;
+            }
+            return this.Valid;
+        }
+
+        public bool Rotate(string Direction)
+        {
+            switch (Direction)
+            {
+                case "LEFT":
+                    switch (this.Dir)
+                    {
+                    case "NORTH":
+                        this.Dir = "WEST";
+                        break;
+                    case "SOUTH":
+                            this.Dir = "EAST";
+                        break;
+                    case "EAST":
+                            this.Dir = "NORTH";
+                        break;
+                    case "WEST":
+                            this.Dir = "SOUTH";
+                        break;
+                    }
+                    break;
+                case "RIGHT":
+                    switch (this.Dir)
+                    {
+                        case "NORTH":
+                            this.Dir = "EAST";
+                            break;
+                        case "SOUTH":
+                            this.Dir = "WEST";
+                            break;
+                        case "EAST":
+                            this.Dir = "SOUTH";
+                            break;
+                        case "WEST":
+                            this.Dir = "NORTH";
+                            break;
+                    }
+                    break;
+            }
+            return true;
+        }
+        public string Report()
+        {
+            string strReturn = " - Current Position: " + this.X + "," + this.Y + " Facing: " + this.Dir;
+            return strReturn;
+        }
+
+        public bool Move(int maxX, int maxY)
+        {
+            bool boolReturn = true;
+            if (this.Dir == "NORTH")
+            {
+                this.Y++;
+                if (this.Y > maxY)
+                {
+                    this.Y--;
+                    boolReturn = false;
+                }
+            }
+            if (this.Dir == "SOUTH")
+            {
+                this.Y--;
+                if (this.Y < 0)
+                {
+                    this.Y++;
+                    boolReturn = false;
+                }
+            }
+            if (this.Dir == "EAST")
+            {
+                this.X++;
+                if (this.X > maxX)
+                {
+                    this.X--;
+                    boolReturn = false;
+                }
+            }
+            if (this.Dir == "WEST")
+            {
+                this.X--;
+                if (this.X < 0)
+                {
+                    this.X++;
+                    boolReturn = false;
+                }
+            }
+            return boolReturn;
+        }
     }
     class Program
     {
@@ -42,98 +146,27 @@ namespace RobotSimulation
                 if ((line.Length >= 6) && (line.Substring(0,5) == "PLACE"))
                 {
                     string[] arrArgs = line.Substring(6).Split(",");
-                    robotPosition.X = Convert.ToInt32(arrArgs[0]);
-                    robotPosition.Y = Convert.ToInt32(arrArgs[1]);
-                    robotPosition.Dir = arrArgs[2];
-                    if ((robotPosition.X >= 0) && (robotPosition.X <= maxX) && (robotPosition.Y >= 0) && (robotPosition.Y <= maxY))
+                    bool boolRet = robotPosition.Place(Convert.ToInt32(arrArgs[0]), Convert.ToInt32(arrArgs[1]), arrArgs[2], maxX, maxY);
+                    if (!boolRet)
                     {
-                        robotPosition.Valid = true;
+                        Console.Write(" - Ignored");
+
                     }
-                    else
+                }
+                if (((line == "LEFT") || (line == "RIGHT")) && robotPosition.Valid)
+                {
+                    robotPosition.Rotate(line);
+                }
+                if ((line == "MOVE") && robotPosition.Valid)
+                {
+                    if (!robotPosition.Move(maxX, maxY))
                     {
                         Console.Write(" - Ignored");
                     }
                 }
-                if ((line == "LEFT") && robotPosition.Valid)
-                {
-                    string currentDir = robotPosition.Dir;
-                    switch (currentDir)
-                    {
-                        case "NORTH":
-                            robotPosition.Dir = "WEST";
-                            break;
-                        case "SOUTH":
-                            robotPosition.Dir = "EAST";
-                            break;
-                        case "EAST":
-                            robotPosition.Dir = "NORTH";
-                            break;
-                        case "WEST":
-                            robotPosition.Dir = "SOUTH";
-                            break;
-                    }
-                }
-                if ((line == "RIGHT") && robotPosition.Valid)
-                {
-                    string currentDir = robotPosition.Dir;
-                    switch (currentDir)
-                    {
-                        case "NORTH":
-                            robotPosition.Dir = "EAST";
-                            break;
-                        case "SOUTH":
-                            robotPosition.Dir = "WEST";
-                            break;
-                        case "EAST":
-                            robotPosition.Dir = "SOUTH";
-                            break;
-                        case "WEST":
-                            robotPosition.Dir = "NORTH";
-                            break;
-                    }
-                }
-                if ((line == "MOVE") && robotPosition.Valid)
-                {
-                    if (robotPosition.Dir == "NORTH")
-                    {
-                        robotPosition.Y++;
-                        if (robotPosition.Y > maxY)
-                        {
-                            robotPosition.Y--;
-                            Console.Write(" - Ignored");
-                        }
-                    }
-                    if (robotPosition.Dir == "SOUTH")
-                    {
-                        robotPosition.Y--;
-                        if (robotPosition.Y < 0)
-                        {
-                            robotPosition.Y++;
-                            Console.Write(" - Ignored");
-                        }
-                    }
-                    if (robotPosition.Dir == "EAST")
-                    {
-                        robotPosition.X++;
-                        if (robotPosition.X > maxX)
-                        {
-                            robotPosition.X--;
-                            Console.Write(" - Ignored");
-                        }
-                    }
-                    if (robotPosition.Dir == "WEST")
-                    {
-                        robotPosition.X--;
-                        if (robotPosition.X < 0)
-                        {
-                            robotPosition.X++;
-                            Console.Write(" - Ignored");
-                        }
-                    }
-                }
                 if ((line == "REPORT") && robotPosition.Valid)
                 {
-                    Console.Write(" - Current Position: " + robotPosition.X + "," + robotPosition.Y + " Facing: " + robotPosition.Dir);
+                    Console.Write(robotPosition.Report());
                 }
 
                 Console.WriteLine("");
