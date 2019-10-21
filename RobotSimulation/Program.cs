@@ -8,15 +8,15 @@ namespace RobotSimulation
     {
         static void Main(string[] args)
         {
-            //Set the table size
-            int maxX = 4;
-            int maxY = 4;
-
             // Read a text file line by line.  
             string[] lines = File.ReadAllLines("C:\\Source\\RobotSimulation\\commands.txt");
 
-            // Create RobotPosition object
+            // Create required objects
             RobotPosition robotPosition = new RobotPosition();
+
+            //Set the table size
+            Desk.maxX = 4;
+            Desk.maxY = 4;
             
             foreach (string line in lines) { 
                 Console.Write(line);
@@ -31,7 +31,7 @@ namespace RobotSimulation
                 if ((line.Length >= 6) && (line.Substring(0,5) == "PLACE"))
                 {
                     string[] arrArgs = line.Substring(6).Split(",");
-                    bool boolRet = robotPosition.Place(Convert.ToInt32(arrArgs[0]), Convert.ToInt32(arrArgs[1]), arrArgs[2], maxX, maxY);
+                    bool boolRet = robotPosition.Place(Convert.ToInt32(arrArgs[0]), Convert.ToInt32(arrArgs[1]), arrArgs[2]);
                     if (!boolRet)
                     {
                         Console.Write(" - Ignored");
@@ -44,14 +44,14 @@ namespace RobotSimulation
                 }
                 if ((line == "MOVE") && robotPosition.Valid)
                 {
-                    if (!robotPosition.Move(maxX, maxY))
+                    if (!robotPosition.Move())
                     {
                         Console.Write(" - Ignored");
                     }
                 }
                 if ((line == "REPORT") && robotPosition.Valid)
                 {
-                    ConsoleRenderer.RenderDocument(robotPosition.Report(maxX,maxY));
+                    ConsoleRenderer.RenderDocument(robotPosition.Report());
                 }
 
                 Console.WriteLine("");
