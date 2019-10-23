@@ -1,6 +1,5 @@
 ﻿using Alba.CsConsoleFormat;
 using System;
-using System.IO;
 
 namespace RobotSimulation
 {
@@ -8,17 +7,10 @@ namespace RobotSimulation
     {
         static void Main(string[] args)
         {
-            // Read a text file line by line.  
-            string[] lines = File.ReadAllLines("C:\\Source\\RobotSimulation\\commands.txt");
-
             // Create required objects
             RobotPosition robotPosition = new RobotPosition();
 
-            //Set the table size
-            Desk.maxX = 4;
-            Desk.maxY = 4;
-            
-            foreach (string line in lines) { 
+            foreach (string line in robotPosition.commandList()) { 
                 Console.Write(line);
 
                 //Should this command be ignored
