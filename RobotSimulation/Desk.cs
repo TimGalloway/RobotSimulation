@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace RobotSimulation
+﻿namespace RobotSimulation
 {
     public static class Desk
     {
