@@ -1,7 +1,6 @@
 ﻿using Alba.CsConsoleFormat;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace RobotSimulation
 {
@@ -73,16 +72,17 @@ namespace RobotSimulation
             }
             return true;
         }
+
         public Document Report()
         {
             var headerThickness = new LineThickness(LineWidth.Double, LineWidth.Single);
             char arrow = ' ';
             List<Cell> children = new List<Cell>();
-            for (int aa = Desk.maxX; aa >= 0; aa--)
+            for (int xLoop = Desk.maxX; xLoop >= 0; xLoop--)
             {
-                for (int bb = 0; bb <= Desk.maxY; bb++)
+                for (int yLoop = 0; yLoop <= Desk.maxY; yLoop++)
                 {
-                    if ((this.Y == aa) && (this.X == bb))
+                    if ((this.Y == xLoop) && (this.X == yLoop))
                     {
                         switch (this.Dir)
                         {
@@ -110,16 +110,19 @@ namespace RobotSimulation
 
                 }
             }
-            var doc = new Document(
+            Grid grid = new Grid
+            {
+                Color = ConsoleColor.Gray
+            };
+            grid.Children.Add(children);
+            for (int colCount = 0; colCount <= Desk.maxY; colCount++)
+            {
+                grid.Columns.Add(GridLength.Auto);
+            }
+
+            Document doc = new Document(
                 new Span("Current Position: " + this.X + "," + this.Y + " Facing: " + this.Dir) { Color = ConsoleColor.Yellow }, "", "\n",
-                new Grid
-                {
-                    Color = ConsoleColor.Gray,
-                    Columns = { GridLength.Auto, GridLength.Auto, GridLength.Auto, GridLength.Auto, GridLength.Auto },
-                    Children = {
-                        children
-                    }
-                }
+                grid
             );
             return doc;
         }
